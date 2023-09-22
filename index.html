@@ -17,6 +17,7 @@
   height: auto;
   margin-right: 20px; /* Add margin-right to create space between images */
   border-radius: 10px;
+  cursor: pointer;
 
 }
 
@@ -49,27 +50,36 @@
     </div>
   </div>
   <script type="text/javascript">
-  const carousel = document.querySelector('.carousel');
-let position = 0;
-const slidesToShow = 1;
-const slideWidth = carousel.clientWidth / slidesToShow;
+// Get the carousel and card elements
+const carousel = document.querySelector('.carousel');
+const images = carousel.querySelectorAll('img');
 
-function slideNext() {
-  if (position > -(carousel.children.length - slidesToShow) * slideWidth) {
-    position -= slideWidth;
-    carousel.style.transform = `translateX(${position}px)`;
-  }
+// Variable to track the carousel state
+let isCarouselPaused = false;
+
+// Function to stop the carousel
+function stopCarousel() {
+  carousel.style.animationPlayState = 'paused';
+  isCarouselPaused = true;
 }
 
-function slidePrev() {
-  if (position < 0) {
-    position += slideWidth;
-    carousel.style.transform = `translateX(${position}px)`;
-  }
+// Function to start the carousel
+function startCarousel() {
+  carousel.style.animationPlayState = 'running';
+  isCarouselPaused = false;
 }
 
-document.querySelector('.next-button').addEventListener('click', slideNext);
-document.querySelector('.prev-button').addEventListener('click', slidePrev);
+// Attach click event listeners to each image
+images.forEach(image => {
+  image.addEventListener('click', () => {
+    // Check the carousel state and toggle it accordingly
+    if (isCarouselPaused) {
+      startCarousel();
+    } else {
+      stopCarousel();
+    }
+  });
+});
 </script>
 </body>
 </html>
