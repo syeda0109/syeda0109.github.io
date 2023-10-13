@@ -1,85 +1,154 @@
 <!DOCTYPE html>
 <html>
-<head>
-   <style>
-.carousel-container {
-  width: 100%;
-  overflow: hidden;
-}
+  <head>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .carousel-wrapper {
+        width: 100%;
+        overflow: hidden;
+        padding-top: 100px;
+        padding-bottom: 100px;
+      }
 
-.carousel {
-  display: flex;
-  animation: carousel-flow 25s linear infinite;
-}
+      .carousel {
+        display: flex;
+        transition: transform 0.5s ease;
+      }
 
-.carousel img {
-  width: 100%;
-  height: auto;
-  margin-right: 20px; /* Add margin-right to create space between images */
-  border-radius: 10px;
-  cursor: pointer;
+      .carousel-item {
+        width: 30%;
+        height: auto;
+        padding-left: 30px;
+        border-radius: 10px;
+        transform: scale(1);
+        margin-right: 60px;
+        transition: transform 0.3s;
+        cursor: pointer;
+      }
 
-}
+      .carousel-item:last-child {
+        margin-right: 0; /* Remove margin-right from the last image */
+      }
 
-.carousel img:last-child {
-  margin-right: 0; /* Remove margin-right from the last image */
-}
-@keyframes carousel-flow {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-  </style>
-</head>
-<body>
-<div class="carousel-container">
-  <div class="carousel">
-        <img src="./1.png" alt="Picture 1">
-        <img src="./2.png" alt="Picture 2">
-        <img src="./3.png" alt="Picture 3">
-        <img src="./4.png" alt="Picture 4">
-        <img src="./5.png" alt="Picture 5">
-        <img src="./6.png" alt="Picture 6">
-        <img src="./7.png" alt="Picture 7">
-        <img src="./8.png" alt="Picture 8">
-        <img src="./9.png" alt="Picture 9">
-        <img src="./10.png" alt="Picture 10">
+      .carousel-btn-group {
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .carousel-btn {
+        transform: translateY(-50%);
+        padding: 10px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+
+      .zoom-1_2 {
+        transform: scale(1.3) !important;
+        z-index: 1;
+      }
+      .prev-btn {
+        width: 100px;
+        height: 50px;
+        background-image: url(./Left\ arrow.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        border: 0;
+        margin: 5px;
+      }
+      .next-btn {
+        width: 100px;
+        height: 50px;
+        background-image: url(./Right\ arrow.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        border: 0;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="carousel-wrapper">
+      <div class="carousel">
+        <img class="carousel-item" src="./1.png" alt="Picture 1" />
+        <img class="carousel-item" src="./2.png" alt="Picture 2" />
+        <img class="carousel-item" src="./3.png" alt="Picture 3" />
+        <img class="carousel-item" src="./4.png" alt="Picture 4" />
+        <img class="carousel-item" src="./5.png" alt="Picture 5" />
+        <img class="carousel-item" src="./6.png" alt="Picture 6" />
+        <img class="carousel-item" src="./7.png" alt="Picture 7" />
+        <img class="carousel-item" src="./8.png" alt="Picture 8" />
+        <img class="carousel-item" src="./9.png" alt="Picture 9" />
+        <img class="carousel-item" src="./10.png" alt="Picture 10" />
+      </div>
     </div>
-  </div>
-  <script type="text/javascript">
-// Get the carousel and card elements
-const carousel = document.querySelector('.carousel');
-const images = carousel.querySelectorAll('img');
+    <div class="carousel-btn-group">
+      <button class="carousel-btn prev-btn"></button>
+      <button class="carousel-btn next-btn"></button>
+    </div>
 
-// Variable to track the carousel state
-let isCarouselPaused = false;
+    <script type="text/javascript">
+      const carousel = document.querySelector(".carousel");
+      const prevBtn = document.querySelector(".prev-btn");
+      const nextBtn = document.querySelector(".next-btn");
+      const carouselItems = document.querySelectorAll(".carousel-item");
+      const itemWidth = window.innerWidth * 0.3333;
+      let position = 0;
 
-// Function to stop the carousel
-function stopCarousel() {
-  carousel.style.animationPlayState = 'paused';
-  isCarouselPaused = true;
-}
+      function moveCarousel() {
+        carousel.style.transform = `translateX(${position}px)`;
+      }
 
-// Function to start the carousel
-function startCarousel() {
-  carousel.style.animationPlayState = 'running';
-  isCarouselPaused = false;
-}
+      function moveNext() {
+        position -= itemWidth;
+        if (position < -itemWidth * (carouselItems.length - 1)) {
+          position = 0;
+        }
+        moveCarousel();
+      }
 
-// Attach click event listeners to each image
-images.forEach(image => {
-  image.addEventListener('click', () => {
-    // Check the carousel state and toggle it accordingly
-    if (isCarouselPaused) {
-      startCarousel();
-    } else {
-      stopCarousel();
-    }
-  });
-});
-</script>
-</body>
+      function movePrev() {
+        position += itemWidth;
+        if (position > 0) {
+          position = -itemWidth * (carouselItems.length - 1);
+        }
+        moveCarousel();
+      }
+
+      let interval = setInterval(moveNext, 2000);
+
+      nextBtn.addEventListener("click", () => {
+        clearInterval(interval);
+        moveNext();
+        interval = setInterval(moveNext, 2000);
+      });
+
+      prevBtn.addEventListener("click", () => {
+        clearInterval(interval);
+        movePrev();
+        interval = setInterval(moveNext, 2000);
+      });
+
+      const timer = () => {
+        carouselItems.forEach((image) => {
+          const rect = image.getBoundingClientRect();
+          if (
+            rect.left > window.innerWidth / 3 - window.innerWidth / 7 &&
+            rect.left < window.innerWidth / 3 + window.innerWidth / 7
+          ) {
+            image.classList.add("zoom-1_2");
+          } else {
+            image.classList.remove("zoom-1_2");
+          }
+        });
+      };
+
+      setInterval(timer, 300);
+    </script>
+  </body>
 </html>
