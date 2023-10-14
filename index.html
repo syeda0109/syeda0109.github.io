@@ -5,11 +5,14 @@
       * {
         box-sizing: border-box;
       }
+      body{
+        background-color: rgb(243, 243, 243);
+      }
       .carousel-wrapper {
         width: 100%;
         overflow: hidden;
-        padding-top: 100px;
-        padding-bottom: 100px;
+        padding-top: 25px;
+        padding-bottom: 25px;
       }
 
       .carousel {
@@ -18,18 +21,25 @@
       }
 
       .carousel-item {
-        width: 30%;
+        width: 33.33%;
         height: auto;
-        padding-left: 30px;
+        padding-left: 5%;
         border-radius: 10px;
         transform: scale(1);
-        margin-right: 60px;
         transition: transform 0.3s;
         cursor: pointer;
       }
+      .zoom-1_2 {
+        transform: scale(1.2) !important;
+        padding-left: 4%;
+        z-index: 1;
+      }
 
       .carousel-item:last-child {
-        margin-right: 0; /* Remove margin-right from the last image */
+        margin-right: 0;
+      }
+      .carousel-item:first-child {
+        margin-left: 33.33%;
       }
 
       .carousel-btn-group {
@@ -46,10 +56,6 @@
         cursor: pointer;
       }
 
-      .zoom-1_2 {
-        transform: scale(1.3) !important;
-        z-index: 1;
-      }
       .prev-btn {
         width: 100px;
         height: 50px;
